@@ -1,0 +1,11 @@
+Flask
+Flask-CORS
+tensorflow
+keras
+numpy
+pandas
+opencv-python
+scikit-learn
+matplotlib
+Pillow
+gunicorn

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brain Tumor Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #2c3e50, #4ca1af);
+            color: white;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        #preview {
+            max-width: 300px;
+            margin: 20px auto;
+            display: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        button {
+            background: #1abc9c;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #16a085;
+        }
+        #result {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .loading {
+            display: none;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Brain Tumor Detection</h1>
+        <input type="file" id="imageInput" accept="image/*">
+        <br><br>
+        <img id="preview" src="" alt="Image Preview">
+        <br>
+        <button onclick="uploadImage()">Predict</button>
+        <p class="loading" id="loading">Predicting...</p>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        document.getElementById('imageInput').addEventListener('change', function(event) {
+            let reader = new FileReader();
+            reader.onload = function() {
+                let img = document.getElementById('preview');
+                img.src = reader.result;
+                img.style.display = 'block';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        });
+
+        function uploadImage() {
+            let fileInput = document.getElementById('imageInput').files[0];
+            if (!fileInput) {
+                alert("Please select an image!");
+                return;
+            }
+
+            let formData = new FormData();
+            formData.append("file", fileInput);
+            document.getElementById("loading").style.display = "block";
+            document.getElementById("result").innerText = "";
+
+            fetch('http://127.0.0.1:5002/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("loading").style.display = "none";
+                if (data.prediction) {
+                    document.getElementById("result").innerText = "Prediction: " + data.prediction;
+                } else {
+                    document.getElementById("result").innerText = "Error: Prediction not available";
+                }
+            })
+            .catch(error => {
+                document.getElementById("loading").style.display = "none";
+                console.error('Error:', error);
+                document.getElementById("result").innerText = "Error occurred!";
+            });
+        }
+    </script>
+</body>
+</html>
