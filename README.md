@@ -39,8 +39,6 @@ To set up the project on your local machine, follow these steps:
 ## Contributing
 Contributions are welcome! Please fork the repo and create a pull request or open an issue to discuss your changes.
 
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 We thank all contributors and researchers whose work has laid the foundation for this project.
